@@ -13,4 +13,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     void deleteAllByUserIdAndOrderStatus(Long userId, OrderStatus orderStatus);
 
     Page<Order> getOrdersByUserId(Long userId, Pageable pageable);
+
+    Page<Order> getOrdersByOrderStatus(OrderStatus status, Pageable pageable);
+
+    Integer countOrdersByOrderStatus(OrderStatus status);
 }

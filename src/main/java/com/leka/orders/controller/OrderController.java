@@ -55,4 +55,34 @@ public class OrderController {
 
         return orderService.getOrdersByUserId(userId, pageable);
     }
+
+    @GetMapping("/{status}")
+    public Page<OrderDto> getOrdersByOrderStatus(@PathVariable("status") String status,
+                                                 @RequestParam(name = "page", defaultValue = "1") Integer pageNo,
+                                                 @RequestParam(name = "size", defaultValue = "10") Integer pageSize,
+                                                 @RequestParam(name = "sort", defaultValue = "createdAt") String sortField,
+                                                 @RequestParam(name = "dir", defaultValue = "asc") String sortDirection) {
+        Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ?
+                Sort.by(sortField).ascending() : Sort.by(sortField).descending();
+        PageRequest pageable = PageRequest.of(pageNo - 1, pageSize, sort);
+
+        return orderService.getOrdersByOrderStatus(status, pageable);
+    }
+
+    @GetMapping("/{status}/count")
+    public Integer countOrdersByOrderStatus(@PathVariable("status") String status) {
+        return orderService.countOrdersByOrderStatus(status);
+    }
+
+    @GetMapping("")
+    public Page<OrderDto> getAllOrders(@RequestParam(name = "page", defaultValue = "1") Integer pageNo,
+                                       @RequestParam(name = "size", defaultValue = "10") Integer pageSize,
+                                       @RequestParam(name = "sort", defaultValue = "createdAt") String sortField,
+                                       @RequestParam(name = "dir", defaultValue = "asc") String sortDirection) {
+        Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ?
+                Sort.by(sortField).ascending() : Sort.by(sortField).descending();
+        PageRequest pageable = PageRequest.of(pageNo - 1, pageSize, sort);
+
+        return orderService.getAllOrders(pageable);
+    }
 }
