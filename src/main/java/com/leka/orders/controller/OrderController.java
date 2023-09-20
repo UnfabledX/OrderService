@@ -7,15 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/orders")
@@ -43,30 +35,30 @@ public class OrderController {
         orderService.deleteOrdersByOrderId(orderId);
     }
 
-    @GetMapping("/{userId}")
-    public Page<OrderDto> getOrdersByUserId(@PathVariable("userId") Long userId,
-                                            @RequestParam(name = "page", defaultValue = "1") Integer pageNo,
-                                            @RequestParam(name = "size", defaultValue = "10") Integer pageSize,
-                                            @RequestParam(name = "sort", defaultValue = "createdAt") String sortField,
-                                            @RequestParam(name = "dir", defaultValue = "asc") String sortDirection) {
+    @GetMapping("/users/{userId}")
+    public Page<OrderDto> getAllOrdersByUserId(@PathVariable("userId") Long userId,
+                                               @RequestParam(name = "page", defaultValue = "1") Integer pageNo,
+                                               @RequestParam(name = "size", defaultValue = "10") Integer pageSize,
+                                               @RequestParam(name = "sort", defaultValue = "createdAt") String sortField,
+                                               @RequestParam(name = "dir", defaultValue = "asc") String sortDirection) {
         Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ?
                 Sort.by(sortField).ascending() : Sort.by(sortField).descending();
         PageRequest pageable = PageRequest.of(pageNo - 1, pageSize, sort);
 
-        return orderService.getOrdersByUserId(userId, pageable);
+        return orderService.getAllOrdersByUserId(userId, pageable);
     }
 
     @GetMapping("/{status}")
-    public Page<OrderDto> getOrdersByOrderStatus(@PathVariable("status") String status,
-                                                 @RequestParam(name = "page", defaultValue = "1") Integer pageNo,
-                                                 @RequestParam(name = "size", defaultValue = "10") Integer pageSize,
-                                                 @RequestParam(name = "sort", defaultValue = "createdAt") String sortField,
-                                                 @RequestParam(name = "dir", defaultValue = "asc") String sortDirection) {
+    public Page<OrderDto> getAllOrdersByOrderStatus(@PathVariable("status") String status,
+                                                    @RequestParam(name = "page", defaultValue = "1") Integer pageNo,
+                                                    @RequestParam(name = "size", defaultValue = "10") Integer pageSize,
+                                                    @RequestParam(name = "sort", defaultValue = "createdAt") String sortField,
+                                                    @RequestParam(name = "dir", defaultValue = "asc") String sortDirection) {
         Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ?
                 Sort.by(sortField).ascending() : Sort.by(sortField).descending();
         PageRequest pageable = PageRequest.of(pageNo - 1, pageSize, sort);
 
-        return orderService.getOrdersByOrderStatus(status, pageable);
+        return orderService.getAllOrdersByOrderStatus(status, pageable);
     }
 
     @GetMapping("/{status}/count")
@@ -84,5 +76,16 @@ public class OrderController {
         PageRequest pageable = PageRequest.of(pageNo - 1, pageSize, sort);
 
         return orderService.getAllOrders(pageable);
+    }
+
+    @GetMapping("/{orderId}")
+    public OrderDto getOrderById(@PathVariable("orderId") Long orderId) {
+        return orderService.getOrderById(orderId);
+    }
+
+    @PutMapping("/update/{orderId}")
+    public OrderDto updateOrderByIdAndWithStatus(@PathVariable("orderId") Long orderId,
+                                               @RequestParam("status") String status){
+        return orderService.updateOrderByIdAndWithStatus(orderId, status);
     }
 }

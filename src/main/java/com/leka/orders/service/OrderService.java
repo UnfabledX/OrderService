@@ -11,13 +11,17 @@ public interface OrderService {
 
     void deleteOrdersByUserIdAndStatus(Long userId, String status);
 
-    Page<OrderDto> getOrdersByUserId(Long userId, Pageable pageable);
+    Page<OrderDto> getAllOrdersByUserId(Long userId, Pageable pageable);
 
     void deleteOrdersByOrderId(Long orderId);
 
-    Page<OrderDto> getOrdersByOrderStatus(String status, PageRequest pageable);
+    Page<OrderDto> getAllOrdersByOrderStatus(String status, PageRequest pageable);
 
     Integer countOrdersByOrderStatus(String status);
 
     Page<OrderDto> getAllOrders(PageRequest pageable);
+
+    OrderDto getOrderById(Long orderId);
+
+    OrderDto updateOrderByIdAndWithStatus(Long orderId, String status);
 }

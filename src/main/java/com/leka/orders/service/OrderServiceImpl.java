@@ -1,5 +1,6 @@
 package com.leka.orders.service;
 
+import com.leka.orders.NotFoundException;
 import com.leka.orders.entity.Order;
 import com.leka.orders.entity.OrderStatus;
 import com.leka.orders.entity.dto.OrderDto;
@@ -34,7 +35,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Page<OrderDto> getOrdersByUserId(Long userId, Pageable pageable) {
+    public Page<OrderDto> getAllOrdersByUserId(Long userId, Pageable pageable) {
         return orderRepository.getOrdersByUserId(userId, pageable)
                 .map(orderMapper::toDto);
     }
@@ -45,7 +46,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Page<OrderDto> getOrdersByOrderStatus(String status, PageRequest pageable) {
+    public Page<OrderDto> getAllOrdersByOrderStatus(String status, PageRequest pageable) {
         OrderStatus orderStatus = getOrderStatus(status);
         return orderRepository.getOrdersByOrderStatus(orderStatus, pageable)
                 .map(orderMapper::toDto);
@@ -61,6 +62,23 @@ public class OrderServiceImpl implements OrderService {
     public Page<OrderDto> getAllOrders(PageRequest pageable) {
         return orderRepository.findAll(pageable)
                 .map(orderMapper::toDto);
+    }
+
+    @Override
+    public OrderDto getOrderById(Long orderId) {
+        return orderRepository.findById(orderId)
+                .map(orderMapper::toDto)
+                .orElseThrow(() -> new NotFoundException("Order is not found by id"));
+    }
+
+    @Override
+    public OrderDto updateOrderByIdAndWithStatus(Long orderId, String status) {
+        Order order = orderRepository.findById(orderId).orElseThrow(
+                () -> new NotFoundException("Order is not found by id"));
+        OrderStatus orderStatus = getOrderStatus(status);
+        order.setOrderStatus(orderStatus);
+        order = orderRepository.save(order);
+        return orderMapper.toDto(order);
     }
 
     private static OrderStatus getOrderStatus(String status) {
