@@ -48,7 +48,7 @@ public class OrderController {
         return orderService.getAllOrdersByUserId(userId, pageable);
     }
 
-    @GetMapping("/{status}")
+    @GetMapping("/status/{status}")
     public Page<OrderDto> getAllOrdersByOrderStatus(@PathVariable("status") String status,
                                                     @RequestParam(name = "page", defaultValue = "1") Integer pageNo,
                                                     @RequestParam(name = "size", defaultValue = "10") Integer pageSize,
@@ -61,7 +61,7 @@ public class OrderController {
         return orderService.getAllOrdersByOrderStatus(status, pageable);
     }
 
-    @GetMapping("/{status}/count")
+    @GetMapping("/count/{status}")
     public Integer countOrdersByOrderStatus(@PathVariable("status") String status) {
         return orderService.countOrdersByOrderStatus(status);
     }
