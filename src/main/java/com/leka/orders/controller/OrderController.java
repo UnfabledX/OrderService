@@ -1,5 +1,6 @@
 package com.leka.orders.controller;
 
+import com.leka.orders.entity.OrderStatus;
 import com.leka.orders.entity.dto.OrderDto;
 import com.leka.orders.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,7 @@ public class OrderController {
     @DeleteMapping("/delete")
     @ResponseStatus(HttpStatus.OK)
     public void deleteOrdersByUserIdAndStatus(@RequestParam("id") Long userId,
-                                              @RequestParam("status") String status) {
+                                              @RequestParam("status") OrderStatus status) {
         orderService.deleteOrdersByUserIdAndStatus(userId, status);
     }
 
@@ -49,7 +50,7 @@ public class OrderController {
     }
 
     @GetMapping("/status/{status}")
-    public Page<OrderDto> getAllOrdersByOrderStatus(@PathVariable("status") String status,
+    public Page<OrderDto> getAllOrdersByOrderStatus(@PathVariable("status") OrderStatus status,
                                                     @RequestParam(name = "page", defaultValue = "1") Integer pageNo,
                                                     @RequestParam(name = "size", defaultValue = "10") Integer pageSize,
                                                     @RequestParam(name = "sort", defaultValue = "createdAt") String sortField,
@@ -62,7 +63,7 @@ public class OrderController {
     }
 
     @GetMapping("/count/{status}")
-    public Integer countOrdersByOrderStatus(@PathVariable("status") String status) {
+    public Integer countOrdersByOrderStatus(@PathVariable("status") OrderStatus status) {
         return orderService.countOrdersByOrderStatus(status);
     }
 
@@ -85,7 +86,7 @@ public class OrderController {
 
     @PutMapping("/update/{orderId}")
     public OrderDto updateOrderByIdAndWithStatus(@PathVariable("orderId") Long orderId,
-                                               @RequestParam("status") String status){
+                                               @RequestParam("status") OrderStatus status){
         return orderService.updateOrderByIdAndWithStatus(orderId, status);
     }
 }

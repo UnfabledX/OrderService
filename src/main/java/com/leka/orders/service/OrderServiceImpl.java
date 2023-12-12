@@ -29,9 +29,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void deleteOrdersByUserIdAndStatus(Long userId, String status) {
-        OrderStatus orderStatus = getOrderStatus(status);
-        orderRepository.deleteAllByUserIdAndOrderStatus(userId, orderStatus);
+    public void deleteOrdersByUserIdAndStatus(Long userId, OrderStatus status) {
+        orderRepository.deleteAllByUserIdAndOrderStatus(userId, status);
     }
 
     @Override
@@ -46,16 +45,14 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Page<OrderDto> getAllOrdersByOrderStatus(String status, PageRequest pageable) {
-        OrderStatus orderStatus = getOrderStatus(status);
-        return orderRepository.getOrdersByOrderStatus(orderStatus, pageable)
+    public Page<OrderDto> getAllOrdersByOrderStatus(OrderStatus status, PageRequest pageable) {
+        return orderRepository.getOrdersByOrderStatus(status, pageable)
                 .map(orderMapper::toDto);
     }
 
     @Override
-    public Integer countOrdersByOrderStatus(String status) {
-        OrderStatus orderStatus = getOrderStatus(status);
-        return orderRepository.countOrdersByOrderStatus(orderStatus);
+    public Integer countOrdersByOrderStatus(OrderStatus status) {
+        return orderRepository.countOrdersByOrderStatus(status);
     }
 
     @Override
@@ -72,16 +69,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDto updateOrderByIdAndWithStatus(Long orderId, String status) {
+    public OrderDto updateOrderByIdAndWithStatus(Long orderId, OrderStatus status) {
         Order order = orderRepository.findById(orderId).orElseThrow(
                 () -> new NotFoundException("Order is not found by id"));
-        OrderStatus orderStatus = getOrderStatus(status);
-        order.setOrderStatus(orderStatus);
+        order.setOrderStatus(status);
         order = orderRepository.save(order);
         return orderMapper.toDto(order);
     }
 
-    private static OrderStatus getOrderStatus(String status) {
-        return OrderStatus.valueOf(status.toUpperCase());
-    }
 }
