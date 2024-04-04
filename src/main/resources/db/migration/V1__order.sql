@@ -1,6 +1,6 @@
-CREATE SCHEMA IF NOT EXISTS order_teashop_db;
+CREATE SCHEMA IF NOT EXISTS order_service;
 
-CREATE TABLE IF NOT EXISTS order_teashop_db.orders
+CREATE TABLE IF NOT EXISTS order_service.orders
 (
     id                  bigserial,
     user_id             bigint  NOT NULL,
